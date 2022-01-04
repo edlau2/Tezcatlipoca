@@ -97,6 +97,24 @@ Note that discord.io has some bugs in it. Some of them are fixed in the discord.
 after installing discord.io via npm. The fix is in the Git commit comments - if discord.io has a new version release, the fix will need 
 to be migrated. The discord.io lib file will be in $(NODE_PATH)/discord.io/lib - copy the one from [here]/discord.io/lib
   
+Finally, edit config.js to reflect your system. The following lines need changing:
+  
+config.web.secret = "951f5ba6737c56b819db081951c5fd5aaf95f04f6eca4012a1c07b7a2a3a855c"; // $('script[secret]').attr("secret");
+config.web.uid = '2100735'; // $('script[uid]').attr("uid"); 
+  
+Replace '2100735' with your Torn ID, and the 'secret' with the secret found by searching on any Torn page, in the element 
+view in Inspector, for the second instance of 'secret' - the first works to, it's the same, just easier to copy from the second.
+  
+you can use this:
+
+[Secret Saver](https://github.com/edlau2/Tampermonkey/raw/master/SecretSaver/Torn%20Secret%20Saver.user.js)
+  
+to be notified if your secret changes. It also saves the secret in the script's local storage, accessable from the Tampermonkey dashboard.
+  
+You can use my API key.
+  
+## Termination
+  
 To terminate, Ctrl-C will initiate gracefull shutdown, as will '@terminate' from chat (with dev/committee permissions) or 
 from curl. '@abort' forces a kill signal, and @restart will terminate and restart. @reload will reload the config file,
 using any change that may have been made, without restarting. Curl also has it's own commands to exit:
