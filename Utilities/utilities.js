@@ -1,5 +1,6 @@
  
 module.exports = {
+  enableLogfileOutput,
   installSignalHandlers,
   getElapsed,
   millisecondsToHuman,
@@ -23,6 +24,21 @@ module.exports = {
   timerGetTimeLeft,
   stripPunctuation
 }
+
+/*
+ * Set up to mirror console output to a logfile
+ */
+ function enableLogfileOutput(filename, mode='w') {
+  const util = require('util');
+  var logFile = require('fs').createWriteStream(filename + '.log', { flags: mode });
+  var logStdout = process.stdout;
+  console.log = function () {
+    logFile.write(util.format.apply(null, arguments) + '\n');
+    logStdout.write(util.format.apply(null, arguments) + '\n');
+  }
+  console.error = console.log;
+}
+
 
 /**
  * Install hooks/handlers for SIGTERM and SIGINT
