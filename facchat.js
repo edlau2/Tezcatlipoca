@@ -22,6 +22,7 @@ const fs = require('fs');
 const fetch = require('cross-fetch');
 const http = require('http');
 const moment = require('moment');
+const path = require('path');
 
 /*
 const requesters  = {
@@ -34,6 +35,8 @@ var config = require('./config.js'); // 'var' to reload on the fly.
 const listener = require('./request-listener.js');
 const status = require('../Utilities/http-status.js');
 const util = require('../Utilities/utilities.js');
+
+const nodeUtil = require('util');
 
 const Discord = require('discord.io');
 const auth = require('./auth.json');
@@ -50,6 +53,20 @@ if (config.sandbox) config.api.archive = false; // For now, don't let sandbox te
 const facRoomID = config.web.roomId;
 const globalRoomID = 'Global';
 const tradeRoomID = 'Trade';
+
+const scriptName = path.basename(module.filename, path.extname(module.filename));
+
+var logFile = null;
+var logStdout = process.stdout;
+if (config.logToFile) {
+	logFile = fs.createWriteStream(scriptName + '.log', { flags: 'w' }); // Use 'a' to append to existing
+
+	console.log = function () {
+	  logFile.write(nodeUtil.format.apply(null, arguments) + '\n');
+	  logStdout.write(nodeUtil.format.apply(null, arguments) + '\n');
+	}
+	console.error = console.log;
+}
 
 const defConsoleDebug = console.debug;
 if (!config.debug) console.debug = function(){};
@@ -179,6 +196,7 @@ function finalTerm() {
 	console.log(ut() + 'Terminating process...');
 	setTimeout(function() {
 		console.log(ut() + 'Calling process.exit().');
+		if (logFile) logFile.close();
 		process.exit();
 	}, 1000);
 }
