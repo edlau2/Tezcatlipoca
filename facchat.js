@@ -55,18 +55,7 @@ const globalRoomID = 'Global';
 const tradeRoomID = 'Trade';
 
 const scriptName = path.basename(module.filename, path.extname(module.filename));
-
-var logFile = null;
-var logStdout = process.stdout;
-if (config.logToFile) {
-	logFile = fs.createWriteStream(scriptName + '.log', { flags: 'w' }); // Use 'a' to append to existing
-
-	console.log = function () {
-	  logFile.write(nodeUtil.format.apply(null, arguments) + '\n');
-	  logStdout.write(nodeUtil.format.apply(null, arguments) + '\n');
-	}
-	console.error = console.log;
-}
+if (config.logToFile) {util.enableLogfileOutput(scriptName, config.logfilemode)};
 
 const defConsoleDebug = console.debug;
 if (!config.debug) console.debug = function(){};
