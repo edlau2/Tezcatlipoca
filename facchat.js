@@ -86,8 +86,7 @@ var stats = {'dups': 0,
  * 
  *******************************************************************************/
 
-console.log('\n' + ut() + 'Starting facchat.js:\n\tPID = ' + process.pid + '\n\tPlatform: ' + process.platform);
-//console.debug(ut() + 'Torn Fac Chat Configuration:\n', config);
+console.log('\n' + ut() + 'Starting' + scriptName + ':\n\tPID = ' + process.pid + '\n\tPlatform: ' + process.platform + '\n');
 
 // Check for an orphaned process
 let lastPid = null;
@@ -98,7 +97,7 @@ try {
 		process.kill(lastPid, 'SIGKILL');
 	}
 } catch (e) {
-	console.debug('Can`t check last PID: ', e);
+	console.debug(ut() + 'Can`t check last PID: ', e);
 }
 
 // Traps various signals to abort, quit, run under a debugger, etc.
@@ -185,7 +184,7 @@ function finalTerm() {
 	console.log(ut() + 'Terminating process...');
 	setTimeout(function() {
 		console.log(ut() + 'Calling process.exit().');
-		if (logFile) logFile.close();
+		//if (logFile) logFile.close();
 		process.exit();
 	}, 1000);
 }
@@ -1272,7 +1271,7 @@ async function bulkDeleteOldMsgs(channel) {
 
 const singleDeleteTimeout  = 3000;
 function singleDeleteOldMsgs(channel) {
-	if (!singleDeleteQueue.length) return;
+	if (!singleDeleteQueue || !singleDeleteQueue.length) return;
 	let id = singleDeleteQueue.pop();
 	console.log(ut() + '[singleDeleteOldMsgs] deleting [' + id + '] remaining ' + singleDeleteQueue.length);
 	bot.deleteMessage({channelID: channel, messageID: id}, (err) => { 
