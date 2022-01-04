@@ -1,0 +1,27 @@
+{
+  "name": "facchat",
+  "version": "2.0.0",
+  "description": "Mirrors faction chat from Torn to Discord",
+  "main": "facchat.js",
+  "dependencies": {
+    "cross-fetch": "^3.1.4",
+    "discord.io": "github:woor/discord.io#gateway_v6",
+    "moment": "^2.29.1",
+    "node-fetch": "^3.1.0",
+    "ws": "^8.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edlau2/Node-JS/tree/main/Fac-Chat"
+  },
+  "author": "xedx [2100735]",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edlau2/Node-JS/tree/main/Fac-Chat/issues"
+  },
+  "homepage": "https://github.com/edlau2/tree/main/Fac-Chat/#README"
+}
