@@ -93,10 +93,9 @@ ln -vs "$(npm root -g)" "$HOME"/.node_modules
 // Test
 echo 'require("cross-fetch")' | node
 
-  
 Note that discord.io has some bugs in it. Some of them are fixed in the discord.io/lib directory (index.js), copy this file over as well
 after installing discord.io via npm. The fix is in the Git commit comments - if discord.io has a new version release, the fix will need 
-to be migrated.
+to be migrated. The discord.io lib file will be in $(NODE_PATH)/discord.io/lib - copy the one from [here]/discord.io/lib
   
 To terminate, Ctrl-C will initiate gracefull shutdown, as will '@terminate' from chat (with dev/committee permissions) or 
 from curl. '@abort' forces a kill signal, and @restart will terminate and restart. @reload will reload the config file,
