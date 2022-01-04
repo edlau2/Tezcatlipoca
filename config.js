@@ -18,6 +18,8 @@ config.filter = {};
 config.discord = {};
 
 // Enable for special debug support. Enables 'console.debug(...)'.
+config.logToFile = true; // true to echo console logging to logfile
+config.logfilemode = 'w'; // 'a' to append
 config.debug = true;
 config.sandbox = false; // true to use sandbox channel webhook, false to use private fac chat channel.
 
