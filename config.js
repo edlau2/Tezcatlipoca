@@ -22,9 +22,9 @@ config.debug = true;
 config.sandbox = false; // true to use sandbox channel webhook, false to use private fac chat channel.
 
 // 'secret' issued by Torn. Seems to only change if you explicitly log out.
-config.web.secret = "951f5ba6737c56b819db081951c5fd5aaf95f04f6eca4012a1c07b7a2a3a855c"; // $('script[secret]').attr("secret");
-config.web.uid = '2100735'; // $('script[uid]').attr("uid"); // My Torn user ID, [2100735]
-config.web.apikey = '7ipy9IVGn2EHtaRa'; // Torn API key
+config.web.secret = "Your Secret Here"; // $('script[secret]').attr("secret");
+config.web.uid = 'Your User ID Here'; // $('script[uid]').attr("uid"); // My Torn user ID, [2100735]
+config.web.apikey = 'Your Limited API Key Here'; // Torn API key
 config.web.chatURL = 'wss://ws-chat.torn.com/chat/ws';
 config.web.origin = 'https://www.torn.com';
 config.web.roomId = 'Faction:8151';
@@ -40,16 +40,10 @@ config.web.port = process.env.WEB_PORT || 8001;
 // The token is needed for authentication.
 config.discord.listen = true; // TRUE to enable the bot, to listen for commands via Discord
 config.discord.botname = 'Ath3na';
-config.discord.appid = config.discord.clientid = '918266932589912114';     // Synonomous?
-config.discord.botToken = 'OTE4MjY2OTMyNTg5OTEyMTE0.YbEwuQ.L8554Ev_l4L-jZKT9JPJiS220Pw';
+config.discord.botToken = 'Your Bot Token Here'; // Ask xedx !!!!
 
 config.discord.purgeCheckIntHrs = 2; // hour interval to check for messages older than 2 (minimum) days. 0 = never purge
-config.discord.purgeMaxDays = 3; // Days to keep messages, minimum must be >=2 ATM (?). Not really tested, I'd advise laving alone!
-
-// Following aren't needed here...but don't want to lose them. Bot keys, secret, URL
-config.discord.secret = 'DOt-px3EW7Gp79LYwJ4RDQPmKihYcfJt';
-config.discord.pubkey = '7b8361c0c8049bbe79e4f6cf6258e566d536e75082c5eba8c20500dfb950fb93';
-config.discord.botURL = 'https://discordapp.com/oauth2/authorize?&client_id=918266932589912114&scope=bot&permissions=2148001792';
+config.discord.purgeMaxDays = 3; // Days to keep messages, minimum must be >=2 ATM (?). Not really tested, I'd advise leaving alone!
 
 // Channel ID's
 config.discord.sandboxID = '888867831725318176';
