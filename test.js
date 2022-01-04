@@ -1,107 +1,88 @@
-const Discord = require('discord.io');
-var config = require('./config.js'); // 'var' to reload on the fly.
+
+// Files just to include some common stuff. Really only need cross-fetch for this example
+const fetch = require('cross-fetch');
+
+const path = require('path'); // For script name. Not required.
+
+// Used to get your API key, and some basic utilities that aren't used here.
+const config = require('./config.js');
 const util = require('../Utilities/utilities.js');
 
-var bot = null;
+// Just some debugging stuff.
+console.debug = config.debug ? util.debug : function(){}; // To enable/disable debug only logging
+const ut = function() {return (util.timestamp() + ' ')}; // For logging
+const scriptName = path.basename(module.filename, path.extname(module.filename)); // For logging
 
-const defConsoleDebug = console.debug;
-if (!config.debug) console.debug = function(){};
-const ut = function() {return (util.timestamp() + ' ')};
+/********************************************************************************
+*
+* Main entry point point: calls main() and waits for the call to get the attack log
+*
+********************************************************************************/
 
-startBot();
+// Call the function that kicks things off. Typicalls, this would be a fn
+// to start a web server, open a DB, or anything else that runs async and takes a momemnt,
+// such as 'startWebServer()', 'initDatabase()', etc.
+// See the template file for some more details
 
-var discordRetries = 0;
-function startBot() {
-	console.log(ut() + '[DISCORD] Starting bot.');
-	var chkChannel = config.sandbox ? config.discord.sandboxID : config.discord.facchatID;
+console.log(ut() + ' ' + scriptName + ' is kicking things off...');
+main();
 
-	try {
-		bot = new Discord.Client({
-			token: config.discord.botToken,
-			autorun: true
-		});
-	} catch (err) {
-		console.error(ut() + '[DISCORD] new Bot Error: ', err);
-		process.exit();
+async function main() { // Needs to be async to use await. Otherwise, use the normal promise.then() method.
+	console.log('\n\n' + ut() + '[main] Starting ' + scriptName + '\n\n');
+
+	// can do this two ways: await basically converts the asyc call into a sync call
+	console.log(ut() + '[main] calling "getAttackLog()",,,');
+
+	let result = await getAttackLog(); // Will wait here until the async call completes.
+
+	// Any code here will NOT run until the async call completes.
+	if (result.error) {
+		console.log('\n\n' + ut() + '[main] getAttackLog returned an error: ', result.error);
+	} else {
+		console.log('\n\n' + ut() + '[main] getAttackLog returned Success: ', result.status);
+		console.log(ut() + '[main] Your batstats: ', result.data, '\n\n');
 	}
 
-	bot.on('ready', function (evt) {
-		try {
-			discordRetries = 0;
-			console.log(ut() + '[DISCORD] ' + config.discord.botname + ' Bot connected!');
-			console.log(ut() + '[DISCORD] ' + config.discord.botname + ' logged in as: ');
-			console.log(ut() + '[DISCORD] bot: ', bot); // + bot.username + ' ID: ' + bot.id);
 
-			sendMessageToDiscordUser("Test Message to xedx", '926988316300152944');
+	//process.exit(); // Would just exit here anyways...
 
-			sendMessageToDiscordChannel("Test Message to Sandbox", config.discord.sandboxID);
+	// Alternate way to wait for promise to complete, can be chained
+	/*
+	getAttackLog().then(result => {
+		if (result.error) {
+			console.log('\n\n' + ut() + '[main] getAttackLog returned an error: ', result.error);
+		} else {
+			console.log('\n\n' + ut() + '[main] getAttackLog returned Success: ', result.status);
+			console.log(ut() + '[main] Your batstats: ', result.data, '\n\n');
 
-
-		} catch (err) {
-			console.error(ut() + '[DISCORD] on ready Error: ', err);
-			process.exit();
+			// can call another promise here (or a sync fn)
 		}
 	});
 
-	bot.on('message', function (user, userID, channelID, message, event) {
-
-		// Only respond in configured channels.
-		if (channelID != chkChannel) return;
-
-		try {
-			console.log(ut() + '[DISCORD] user, userID, channelID: ', user + ' ' + userID + ' ' + channelID);
-			console.log(ut() + '[DISCORD] msgID: ' + event.d.id + ' timestamp: ' + event.d.timestamp);
-			console.log(ut() + '[DISCORD] msg: ', message);
-			console.log(ut() + '[DISCORD] Author: ', event.d.author.username);
-			console.log(ut() + '[DISCORD] Bot: ', event.d.author.bot);
-
-			if (event.d.author.bot) return;
-
-		} catch (err) {
-			console.error(ut() + '[DISCORD] on message Error: ', err);
-			process.exit();
-		}
-	}); // end bot.on(message)
-
-	bot.on('disconnect', function(errMsg, code) { 
-		console.log(ut() + '[DISCORD] Error: ' + errMsg + ' Code: ' + code);
-		process.exit();
-		//setTimeout(reconnectBot, 500); //Auto reconnect (if configured to)
-	});
-
-}
-
-// Auto-reconnect function for the bot
-var discordRetries = 0;
-function reconnectBot() { //Auto reconnect
-	if (config.web.attemptRecovery && (discordRetries++ < config.web.maxRecoveries)) {
-		bot.connect();
-	}
-}
-
-// My ID: 926988316300152944
-// sandbox: config.discord.sandboxID
-async function sendMessageToDiscordUser(message, userID) {
-	console.log(ut() + '[sendMessageToDiscordUser] "' + message + '"');
-
-	let res = bot.sendMessage({
-    	to: userID,
-    	message: message
-	});
-
-    console.log(ut() + '[sendMessageToDiscordUser] sent. res = ', res);
-}
-
-function sendMessageToDiscordChannel(message, channel) {
-	console.log(ut() + '[sendMessageToDiscordChannel] "' + message + '"');
-	let res = bot.sendMessage({
-	    to: channel,
-	    message: message
-	})
-
-	console.log(ut() + ut() + '[sendMessageToDiscordChannel] response: ', res);
+	// Any code here will run right away while the async call runs in the background
+	*/
 }
 
 
+// Simple function to query the Torn API, return a promise.
+// fetch() itself is async, so this entire function is.
+function getAttackLog() {
+  let url = 'https://api.torn.com/user/?selections=battlestats&key=' + config.api.key;
+  console.log(ut() + '[getAttackLog] url = ' + url);
 
-
+  try {
+      return new Promise(function(resolve, reject) {
+          console.log(ut() + '[getAttackLog] calling fetch()');
+          fetch(url).then(res => { // Gets the result
+              res.text().then(text => { // Gets the result body
+                  let jsonObj = JSON.parse(text); // Gives us a JSON obj with batstats
+                  resolve({error: null, status: '200 OK', data: jsonObj}); // Resolves the promise
+              });
+          });
+      });
+    } catch(e) { // Exception handler
+        console.error(ut() + '[getAttackLog] Exception: ', e);
+        result = {error: e, status: 'error'};
+        reject(result); // Rejects the promise
+    }
+}

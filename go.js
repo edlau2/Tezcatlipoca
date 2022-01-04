@@ -1,6 +1,6 @@
 const cp = require('child_process');
 
-const scriptName = 'facchat.js';
+const scriptName = 'parse-attack-log.js';
 
 const child = cp.fork(scriptName);
 console.log('Child process: ', child);
