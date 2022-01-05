@@ -1086,7 +1086,7 @@ function clearOldMessages(channel, startID = null) {
 	}
 
 	try {
-		if (!startID) startID = bot.channels[channel].last_message_id;
+		if (!startID) startID = bot.channels[channel] ? bot.channels[channel].last_message_id : null;
 		if (!startID) return;
 	} catch (err) {
 		console.error(ut() + '[clearOldMessages] Error (recovered): ', err);
