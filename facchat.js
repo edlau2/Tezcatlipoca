@@ -739,6 +739,7 @@ function handleInternalMessage(message) {
     switch (parsed) { // Note lower case: use lower case in switch
 
     	// ============= General purpose (available to everyone) commands =============
+        /*
     	case '@help':
     	case 'help':
     	case '!help':
@@ -750,6 +751,7 @@ function handleInternalMessage(message) {
     			sendSeeDiscordChat();
     		}
     		return false;
+	*/
 		case '@banker':
 			if (!config.api.allowBanker) {
 				console.log(ut() + '[handleInternalMessage] Banker notifications disabled!');
